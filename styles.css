@@ -29,9 +29,11 @@ body {
   padding: 3rem;
   text-align: right;
   border-radius: 1.2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .display-number {
+  font-size: 3.6rem;
   font-weight: bold;
   color: #efefef;
 }
@@ -42,25 +44,46 @@ body {
   background-color: #334756;
   padding: 3rem;
   border-radius: 1.2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
-.button {
+.button:link,
+.button:visited {
   text-decoration: none;
-  padding: 2rem;
+  padding: 1.5rem 2rem;
   color: #3a3a3a;
   font-weight: bold;
-  background-color: #eee;
+  background-color: #c4c4c4;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 0.8rem;
+  box-shadow: 0 6px #c4c4c480;
+  transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.button:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px #c4c4c480;
 }
 
-.button-reset {
+.button-reset:link,
+.button-reset:visited {
   grid-column: 1 / span 2;
   background-color: #126e82;
+  box-shadow: 0 6px #126d8276;
   color: #efefef;
 }
-.button-equal {
+.button-reset:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px #126d8276;
+}
+.button-equal:link,
+.button-equal:visited {
   grid-column: 3 / span 2;
   color: #efefef;
   background-color: #ff4c29;
+  box-shadow: 0 6px #ff4d2965;
+}
+.button-equal:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px #ff4d2965;
 }

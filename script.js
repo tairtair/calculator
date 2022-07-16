@@ -1,4 +1,5 @@
 calcBody = document.querySelector(".operations");
+displayNum = document.querySelector(".display-number");
 const buttonSymbols = [
   "7",
   "8",
@@ -19,7 +20,7 @@ const buttonSymbols = [
   "RESET",
   "=",
 ];
-
+// const add = (...nums) => {nums.reduce(acc,curr)=>acc+curr};
 const html = buttonSymbols
   .map((symbol) => {
     let cl = "button";
@@ -34,5 +35,10 @@ window.addEventListener("load", function () {
 });
 
 calcBody.addEventListener("click", function (e) {
-  e.target.closest(".button") && console.log(e.target.innerHTML);
+  if (e.target.closest(".button")) {
+    e.target.innerHTML.match(/[0-9]/g) &&
+      displayNum.insertAdjacentHTML("beforeend", e.target.innerHTML);
+    e.target.innerHTML.match(/[+-\/x]/g) &&
+      displayNum.insertAdjacentHTML("beforeend", e.target.innerHTML);
+  }
 });
