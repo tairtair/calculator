@@ -1,7 +1,26 @@
-calcBody = document.querySelector(".keys");
-screen = document.querySelector(".screen");
-const nums = [];
-let actionPressed = false;
+// class Calculator {
+//   constructor(leftOperand, rightOperand) {
+//     this.leftOperand = leftOperand;
+//     this.rightOperand = rightOperand;
+//   }
+//   clear() {
+//     this.leftOperand = 0;
+//     this.rightOperand = 0;
+//   }
+//   calculation(operator) {
+//     let result;
+//     operator === "add" && (result = this.leftOperand + this.rightOperand);
+//     operator === "substract" && (result = this.leftOperand - this.rightOperand);
+//     operator === "multiply" && (result = this.leftOperand * this.rightOperand);
+//     operator === "divide" && (result = this.leftOperand / this.rightOperand);
+//     return result;
+//   }
+// }
+
+calculatorButtons = document.querySelector(".keys");
+calculatorScreenContainer = document.querySelector(".screen-cont");
+calculatorScreen = document.querySelector(".screen");
+// const nums = [];
 const buttonSymbols = [
   { symbol: "7", class: "button button-number" },
   { symbol: "8", class: "button button-number" },
@@ -15,7 +34,7 @@ const buttonSymbols = [
   { symbol: "2", class: "button button-number" },
   { symbol: "3", class: "button button-number" },
   { symbol: "-", class: "button button-minus", action: "substract" },
-  { symbol: ".", class: "button button-dot" },
+  { symbol: ".", class: "button button-decimal", action: "decimal" },
   { symbol: "0", class: "button button-number" },
   { symbol: "/", class: "button button-divide", action: "divide" },
   { symbol: "x", class: "button button-multiply", action: "multiply" },
@@ -23,6 +42,9 @@ const buttonSymbols = [
   { symbol: "=", class: "button button-equal", action: "calculate" },
 ];
 // const add = (...nums) => {nums.reduce(acc,curr)=>acc+curr};
+// const calculate = (action) => {
+//   if(action === "add")
+// }
 const html = buttonSymbols
   .map(
     (symbol) =>
@@ -33,111 +55,112 @@ const html = buttonSymbols
   .join("");
 
 window.addEventListener("load", function () {
-  calcBody.insertAdjacentHTML("afterbegin", html);
+  calculatorButtons.insertAdjacentHTML("afterbegin", html);
 });
-class Calculator {
-  constructor(leftOperand, rightOperand) {
-    this.leftOperand = leftOperand;
-    this.rightOperand = rightOperand;
-  }
-  clear() {
-    this.leftOperand = 0;
-    this.rightOperand = 0;
-  }
-  calculation(operator) {
-    let result;
-    operator === "add" && (result = this.leftOperand + this.rightOperand);
-    operator === "substract" && (result = this.leftOperand - this.rightOperand);
-    operator === "multiply" && (result = this.leftOperand * this.rightOperand);
-    operator === "divide" && (result = this.leftOperand / this.rightOperand);
-    return result;
-  }
-  // add() {
-  //   return this.leftOperand + this.rightOperand;
-  // }
-  // substract() {
-  //   return this.leftOperand - this.rightOperand;
-  // }
-  // multiply() {
-  //   return this.leftOperand * this.rightOperand;
-  // }
-  // divide() {
-  //   return this.leftOperand * this.rightOperand;
-  // }
-}
+// let firstOperand;
+// let operatorIsActivated;
+const calcultorData = {
+  firstOperand: undefined,
+  secondOperand: undefined,
+  operator: "",
+  symbol: "",
+  operatorIsActivated: undefined,
+};
+calculatorButtons.addEventListener("click", function (e) {
+  btn = e.target;
+  console.log(btn);
 
-// const displayNumber = (key) => {
-//   if (actionPressed) {
-//     screen.innerHTML = "";
-//     key.dataset.value &&
-//       (screen.innerHTML = screen.innerHTML + key.dataset.value);
-//   } else {
-//     screen.innerHTML !== "0" &&
-//       key.dataset.value &&
-//       (screen.innerHTML = screen.innerHTML + key.dataset.value);
-//     screen.innerHTML === "0" &&
-//       key.dataset.value &&
-//       (screen.innerHTML = key.dataset.value);
+  if (btn.dataset.value) {
+    calculatorScreen.value === "0" || calcultorData.operatorIsActivated
+      ? (calculatorScreen.value = btn.dataset.value)
+      : (calculatorScreen.value += btn.dataset.value);
+    calcultorData.operatorIsActivated = false;
+  }
+
+  if (
+    btn.dataset.action === "add" ||
+    btn.dataset.action === "substract" ||
+    btn.dataset.action === "multiply" ||
+    btn.dataset.action === "divide"
+  ) {
+    calcultorData.firstOperand = +calculatorScreen.value;
+    calcultorData.operator = btn.dataset.action;
+    calcultorData.operatorIsActivated = true;
+  }
+
+  if (btn.dataset.action === "calculate" && calcultorData.firstOperand) {
+    calcultorData.operator === "add" &&
+      (calculatorScreen.value =
+        calcultorData.firstOperand + +calculatorScreen.value);
+    calcultorData.operator === "substract" &&
+      (calculatorScreen.value =
+        calcultorData.firstOperand - +calculatorScreen.value);
+    calcultorData.operator === "multiply" &&
+      (calculatorScreen.value =
+        calcultorData.firstOperand * +calculatorScreen.value);
+    calcultorData.operator === "divide" &&
+      (calculatorScreen.value =
+        calcultorData.firstOperand / +calculatorScreen.value);
+  }
+  if (btn.dataset.action === "reset") {
+    calculatorScreen.value = "0";
+    calcultorData.firstOperand = undefined;
+  }
+
+  if (calcultorData.firstOperand && calcultorData.operator) {
+    console.log(calculatorScreenContainer);
+    let operator;
+    calcultorData.operator === "add" && (operator = "+");
+    calcultorData.operator === "substract" && (operator = "-");
+    calcultorData.operator === "multiply" && (operator = "*");
+    calcultorData.operator === "divide" && (operator = "/");
+
+    calculatorScreenContainer.insertAdjacentHTML(
+      "afterbegin",
+      `<p class='preview'>${calcultorData.firstOperand} ${operator}</p>`
+    );
+  }
+});
+
+// let operatorActivated;
+// let lNum, rNum;
+// calcBody.addEventListener("click", function (e) {
+//   const btnEl = e.target;
+//   // Guard close if element dosen't have  button calss and target element dosen't have data-value attribute
+//   if (!btnEl.closest(".button")) return;
+//   if (btnEl.dataset.value) {
+//     if (+screen.value > 0 && !operatorActivated) {
+//       console.log("concat");
+//       screen.value = screen.value + btnEl.dataset.value;
+//     } else if (+screen.value === 0 || operatorActivated) {
+//       console.log("replace");
+//       screen.value = btnEl.dataset.value;
+//       operatorActivated && (operatorActivated = false);
+//     }
 //   }
-// };
-// // screen.textCotent !== "0" &&
-// //   (screen.textCotent = screen.textCotent + key.dataset.value);
-// // screen.textCotent === "0" && (screen.textCotent = key.dataset.value);
-// // btnEl.dataset.value.match(/[0-9]/g) &&
-// //   screen.innerHTML !== "0" &&
-// //   screen.insertAdjacentHTML("beforeend", btnEl.dataset.value);
-// // btnEl.dataset.value.match(/[0-9]/g) &&
-// //   screen.innerHTML === "0" &&
-// //   (screen.innerHTML = btnEl.dataset.value);
 
-// // const clearDisplay = () => (screen.textCotent = "");
-let operatorActivated;
-let lNum, rNum;
-calcBody.addEventListener("click", function (e) {
-  const btnEl = e.target;
-  // Guard close if element dosen't have  button calss and target element dosen't have data-value attribute
-  // if (!btnEl.dataset.value) return;
-  if (!btnEl.closest(".button")) return;
-  if (btnEl.dataset.value) {
-    if (+screen.value > 0 && !operatorActivated) {
-      console.log("contact");
-      screen.value = screen.value + btnEl.dataset.value;
-    } else if (+screen.value === 0 || operatorActivated) {
-      console.log("replace");
-      screen.value = btnEl.dataset.value;
-      operatorActivated && (operatorActivated = false);
-    }
-  }
-
-  if (btnEl.dataset.action) {
-    if (
-      btnEl.dataset.action === "add" ||
-      btnEl.dataset.action === "substract" ||
-      btnEl.dataset.action === "multiply" ||
-      btnEl.dataset.action === "divide"
-    ) {
-      operatorActivated = true;
-      if (lNum) {
-        console.log(screen.value);
-        rNum = +screen.value;
-      } else {
-        lNum = +screen.value;
-      }
-      console.log(lNum, rNum);
-      if (lNum && rNum) {
-        const calc = new Calculator(lNum, rNum);
-        const result = calc.calculation(btnEl.dataset.action);
-        screen.value = result;
-        lNum = result;
-        rNum = 0;
-      }
-    }
-  }
-  // const calc = new Calculator();
-  // if (btnEl.dataset.action === "plus") {
-  //   actionPressed = true;
-  //   nums.push(+screen.innerHTML);
-  // }
-  // e.target.dataset.value.match(/[+-\/x]/g) &&
-  //   screen.insertAdjacentHTML("beforeend", e.target.innerHTML);
-});
+//   if (btnEl.dataset.action) {
+//     if (
+//       btnEl.dataset.action === "add" ||
+//       btnEl.dataset.action === "substract" ||
+//       btnEl.dataset.action === "multiply" ||
+//       btnEl.dataset.action === "divide"
+//     ) {
+//       if (lNum) {
+//         rNum = +screen.value;
+//       } else {
+//         lNum = +screen.value;
+//       }
+//       console.log(lNum, rNum);
+//       if (lNum && rNum) {
+//         const calc = new Calculator(lNum, rNum);
+//         const result = calc.calculation(btnEl.dataset.action);
+//         screen.value = result;
+//         lNum = result;
+//         // rNum = "";
+//         // operatorActivated = false;
+//       }
+//       operatorActivated = true;
+//     }
+//   }
+// });
